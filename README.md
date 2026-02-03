@@ -41,71 +41,20 @@
 * **Styling:** Tailwind CSS, Lucide React (Icons)
 * **Backend:** Node.js, Express Framework
 * **Database:** MySQL (Relational Database)
-* **Tools:** VS Code, MySQL Workbench, Git
 
 ---
 
-## ⚙️ วิธีการติดตั้งและรันโปรเจกต์ (Installation)
+## ⚙️ วิธีการติดตั้งและรันโปรเจกต์ (Installation Guide)
 
-### 1. ตั้งค่าฐานข้อมูล (Database)
-1.  สร้างฐานข้อมูลชื่อ `smart_pos` (หรือ `retail_db` ตามการตั้งค่าของคุณ) ใน MySQL
-2.  รันคำสั่ง SQL ด้านล่างเพื่อสร้างตาราง:
+### 1. ตั้งค่าฐานข้อมูล (Database Setup)
+1.  ตรวจสอบว่าเครื่องมี **MySQL** ติดตั้งอยู่
+2.  สร้าง Database ชื่อ `smart_pos` (หรือ `retail_db`)
+3.  รันคำสั่ง SQL จากไฟล์ `database.sql` เพื่อสร้างตาราง
 
-```sql
-CREATE DATABASE IF NOT EXISTS smart_pos;
-USE smart_pos;
-
--- ตารางสินค้า
-CREATE TABLE products (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  category VARCHAR(50),
-  price DECIMAL(10, 2) NOT NULL,
-  stock INT NOT NULL DEFAULT 0,
-  status VARCHAR(20) DEFAULT 'active'
-);
-
--- ตารางพนักงาน
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    role ENUM('admin', 'staff') NOT NULL DEFAULT 'staff'
-);
-
--- ตารางสมาชิก
-CREATE TABLE members (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  phone VARCHAR(20) UNIQUE NOT NULL,
-  points INT DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- ตารางยอดขาย
-CREATE TABLE sales (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  total_amount DECIMAL(10, 2) NOT NULL,
-  payment_method ENUM('cash', 'transfer') NOT NULL,
-  item_count INT NOT NULL,
-  sale_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-  member_id INT NULL,
-  points_earned INT DEFAULT 0
-);
-
--- ตารางรายการสินค้าในบิล
-CREATE TABLE sale_items (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  sale_id INT NOT NULL,
-  product_id INT NOT NULL,
-  qty INT NOT NULL,
-  price DECIMAL(10, 2) NOT NULL,
-  FOREIGN KEY (sale_id) REFERENCES sales(id),
-  FOREIGN KEY (product_id) REFERENCES products(id)
-);
-
--- User เริ่มต้น: admin / 1234
-INSERT INTO users (username, password, name, role) VALUES 
-('admin', '1234', 'Admin User', 'admin'),
-('staff', '1234', 'Staff User', 'staff');
+### 2. รันหลังบ้าน (Backend Server)
+เปิด Terminal เข้าไปที่โฟลเดอร์ server
+```bash
+cd server
+npm install
+# หมายเหตุ: สร้างไฟล์ .env และตั้งค่า DB_HOST, DB_USER, DB_PASSWORD ให้ตรงกับเครื่องคุณ
+npm run dev
